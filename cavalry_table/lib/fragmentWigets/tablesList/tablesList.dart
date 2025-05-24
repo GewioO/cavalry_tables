@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../tablesPaths.dart';
+import '../../tablesPaths.dart';
 import 'package:cavalry_table/tablesHandler/tablesHandler.dart';
 
 class Tableslist extends StatefulWidget {
@@ -20,6 +20,11 @@ class Tableslist extends StatefulWidget {
 
 class _TableslistState extends State<Tableslist> {
     //get table handler for parent class
+    void _tapOnElement(Map<String, dynamic>? table)
+    {
+      widget.onResultSelected(table);
+      widget.updateTempTable(table);
+    }
 
     @override
     Widget build(BuildContext context) {
@@ -33,8 +38,7 @@ class _TableslistState extends State<Tableslist> {
                           final table = widget.tablesCharacter![key];
                           return ListTile(
                             onTap: () { 
-                              widget.onResultSelected(table);
-                              widget.updateTempTable(table);
+                              _tapOnElement(table);
                             },
                             title: Text(table['title']),
                           );
@@ -50,8 +54,7 @@ class _TableslistState extends State<Tableslist> {
                           final table = widget.tablesCharacterEquipment![key];
                           return ListTile(
                             onTap: () { 
-                              widget.onResultSelected(table);
-                              widget.updateTempTable(table);
+                              _tapOnElement(table);
                             },
                             title: Text(table['title']),
                           );
@@ -67,8 +70,7 @@ class _TableslistState extends State<Tableslist> {
                           final table = widget.tablesCharacterExtras![key];
                           return ListTile(
                             onTap: () { 
-                              widget.onResultSelected(table);
-                              widget.updateTempTable(table);
+                              _tapOnElement(table);
                             },
                             title: Text(table['title']),
                           );
@@ -84,8 +86,7 @@ class _TableslistState extends State<Tableslist> {
                           final table = widget.tablesCharacterSkills![key];
                           return ListTile(
                             onTap: () { 
-                              widget.onResultSelected(table);
-                              widget.updateTempTable(table);
+                              _tapOnElement(table);
                             },
                             title: Text(table['title']),
                           );

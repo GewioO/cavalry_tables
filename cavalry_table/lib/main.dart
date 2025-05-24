@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cavalry_table/baseWigets/commonFlatButton.dart';
-import 'package:cavalry_table/fragmentWigets/diceButton/diceButton.dart';
+import 'package:cavalry_table/fragmentWigets/diceButton/diceButtonWidget.dart';
 import 'package:cavalry_table/fragmentWigets/bottomBar.dart';
 import 'package:cavalry_table/fragmentWigets/tablesList.dart';
 import 'package:cavalry_table/dices/throwDice.dart';

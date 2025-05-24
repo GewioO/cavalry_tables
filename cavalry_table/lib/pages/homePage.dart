@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:cavalry_table/baseWigets/commonFlatButton.dart';
-import 'package:cavalry_table/fragmentWigets/diceButton/diceButton.dart';
+import 'package:cavalry_table/fragmentWigets/diceButton/diceButtonWidget.dart';
 import 'package:cavalry_table/fragmentWigets/bottomBar.dart';
 import 'package:cavalry_table/fragmentWigets/tablesList.dart';
 import 'package:cavalry_table/dices/throwDice.dart';
 import 'package:cavalry_table/tablesPaths.dart';
 import 'package:cavalry_table/tablesHandler/tablesHandler.dart';
 import 'package:cavalry_table/fragmentWigets/diceButton/diceButtonLogic.dart';
+import 'package:cavalry_table/fragmentWigets/historyButton/historyButtonWidget.dart';
+import 'package:cavalry_table/fragmentWigets/InstructionButton/InstructionButtonWidget.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key, required this.title});
@@ -259,20 +261,8 @@ class _MainPageContentState extends State<MainPageContent> {
                 ),
             ],
           ),
-          Container(
-            alignment: Alignment.bottomLeft,
-            child: CommonFlatButton(
-              buttonText: "Історія",
-              onPressedCallback: () {},
-            ),
-          ),
-          Container(
-            alignment: Alignment.bottomRight,
-            child: CommonFlatButton(
-              buttonText: "Інструкція",
-              onPressedCallback: () {},
-            ),
-          ),
+          HistoryButton(),
+          InstructionButton(),
         ],
       )
     );

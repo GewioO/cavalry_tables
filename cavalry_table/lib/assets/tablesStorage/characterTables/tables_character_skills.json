@@ -1,0 +1,22 @@
+{
+    "tables_character_skills": {
+        "table_1": {
+            "title": "Характеристики",
+            "dice": ["6"],
+            "dice_type": "single",
+            "results": {
+                "1": "0",
+                "2": "0",
+                "3": "0",
+                "4": "0",
+                "5": "1",
+                "6": "1"
+            }
+        },
+        "table_2": {
+            "title": "Стійкість та удача",
+            "dice": ["6", "6"],
+            "dice_type": "separate"
+        }
+    }
+}

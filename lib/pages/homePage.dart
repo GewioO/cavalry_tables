@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:cavalry_table/baseWigets/commonFlatButton.dart';
 import 'package:cavalry_table/fragmentWigets/diceButton/diceButtonWidget.dart';
-import 'package:cavalry_table/fragmentWigets/bottomBar/bottomBar.dart';
+import 'package:cavalry_table/fragmentWigets/bottomBar/bottomBarWidget.dart';
 import 'package:cavalry_table/fragmentWigets/tablesList/tablesList.dart';
 import 'package:cavalry_table/tablesPaths.dart';
 import 'package:cavalry_table/tablesHandler/tablesHandler.dart';
 import 'package:cavalry_table/fragmentWigets/diceButton/diceButtonLogic.dart';
 import 'package:cavalry_table/fragmentWigets/historyButton/historyButtonWidget.dart';
 import 'package:cavalry_table/fragmentWigets/InstructionButton/InstructionButtonWidget.dart';
+import 'package:cavalry_table/pages/pagesNavigator.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key, required this.title});
-
-  final String title;
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -20,8 +19,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  //create state for preset button or separate table value
-  //create preset button, that uses a few table
 
   var tablesHandler = TablesHandler();
   Map<String, dynamic>? selectedResult;
@@ -32,10 +29,12 @@ class _HomePageState extends State<HomePage> {
   final tablesPaths = TablesPathes();
   Map<String, dynamic>? tempSelectedTable;
   bool isSingleThrown = false;
+  late PagesNavigator navigatorObj;
 
   @override
   void initState() {
     super.initState();
+    navigatorObj = new PagesNavigator(HomePage());
     tablesHandler.loadTablesCharacter().then((data) {
       setState(() {
         tablesCharacter = data['tables_character'];
@@ -105,7 +104,7 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       appBar: AppBar(title: const Text('')),
-      body: MainPageContent(
+      body: HomePageContent(
         tablesHandler: tablesHandler,
         tablesCharacter: tablesCharacter,
         selectedTable: selectedResult,
@@ -115,7 +114,7 @@ class _HomePageState extends State<HomePage> {
       ),
       bottomNavigationBar: BottomAppBar(
         shape: const CircularNotchedRectangle(),
-        child: BottomBar(),
+        child: BottomBar(navigatorObj: navigatorObj,),
       ),
       endDrawer: Drawer(
         child: Tableslist(
@@ -132,14 +131,14 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-class MainPageContent extends StatefulWidget {
+class HomePageContent extends StatefulWidget {
   final TablesHandler tablesHandler;
   final Map<String, dynamic>? tablesCharacter;
   final Map<String, dynamic>? selectedTable;
   final Map<String, dynamic>? tempSelectedTable;
   final VoidCallback onPressedCallback;
   final bool isSingleThrown; 
-  const MainPageContent({
+  const HomePageContent({
     Key? key,
     required this.tablesHandler,
     required this.tablesCharacter,
@@ -150,10 +149,10 @@ class MainPageContent extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<MainPageContent> createState() => _MainPageContentState();
+  State<HomePageContent> createState() => _HomePageContentState();
 }
 
-class _MainPageContentState extends State<MainPageContent> {
+class _HomePageContentState extends State<HomePageContent> {
   static const int defaultRollValue = 20;
   int lastRoll = defaultRollValue;
   bool _expandedDicesList = false;
@@ -172,7 +171,7 @@ class _MainPageContentState extends State<MainPageContent> {
   }
 
   @override
-  void didUpdateWidget(covariant MainPageContent oldWidget) {
+  void didUpdateWidget(covariant HomePageContent oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.isSingleThrown != widget.isSingleThrown) {
       setState(() {

@@ -13,6 +13,6 @@ class _CommonRoundButtonState extends State<CommonRoundButton> {
 
   @override
   Widget build(BuildContext context) {
-    return IconButton(icon: const Icon(Icons.plus_one), onPressed: () {}, );//ElevatedButton(style: style, onPressed: widget.onPressedCallback, child: Text(widget.buttonText));
+    return IconButton(icon: const Icon(Icons.plus_one), onPressed: widget.onPressedCallback, );
   }
 }

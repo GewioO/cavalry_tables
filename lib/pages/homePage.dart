@@ -9,6 +9,7 @@ import 'package:cavalry_table/fragmentWigets/diceButton/diceButtonLogic.dart';
 import 'package:cavalry_table/fragmentWigets/historyButton/historyButtonWidget.dart';
 import 'package:cavalry_table/fragmentWigets/InstructionButton/InstructionButtonWidget.dart';
 import 'package:cavalry_table/pages/pagesNavigator.dart';
+import 'package:cavalry_table/utils/common_constants.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -153,7 +154,6 @@ class HomePageContent extends StatefulWidget {
 }
 
 class _HomePageContentState extends State<HomePageContent> {
-  static const int defaultRollValue = 20;
   int lastRoll = defaultRollValue;
   bool _expandedDicesList = false;
   int _diceType = defaultRollValue;
@@ -217,7 +217,7 @@ class _HomePageContentState extends State<HomePageContent> {
                   alignment: Alignment.topCenter,
                   child: (!_thrownModeSingleDice && _thrownResult != null && _thrownResult.length > 1) ?
                     Text(_thrownResult[1], textAlign: TextAlign.center,) :
-                    Text('text', textAlign: TextAlign.center,),
+                    Container(),
                 ),
                 SizedBox(height: 20),
                 _expandedDicesList?
@@ -235,7 +235,7 @@ class _HomePageContentState extends State<HomePageContent> {
                           _diceButtonText = buttonText;
                           lastRoll = int.tryParse(result.first.toString()) ?? lastRoll;
                         });
-                      },
+                      }
                     );
                   },
                   buttonText: _diceButtonText,

@@ -12,7 +12,6 @@ void handleDiceButtonPressed({
 }) {
   List<dynamic> result;
   String buttonText;
-
   if (tempSelectedTable != null && tempSelectedTable.isNotEmpty && !thrownModeSingleDice) {
     result = tablesHandler.getResult(tempSelectedTable);
 

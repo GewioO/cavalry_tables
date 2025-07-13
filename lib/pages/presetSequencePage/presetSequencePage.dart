@@ -9,10 +9,12 @@ import 'package:cavalry_table/fragmentWigets/historyButton/historyButtonWidget.d
 import 'package:cavalry_table/fragmentWigets/InstructionButton/InstructionButtonWidget.dart';
 import 'package:cavalry_table/pages/homePage.dart';
 import 'package:cavalry_table/pages/pagesNavigator.dart';
+import 'package:cavalry_table/utils/common_constants.dart';
 
 class PresetSequencePage extends StatefulWidget {
   final PagesNavigator navigatorObj;
-  const PresetSequencePage({super.key, required this.navigatorObj});
+  List<GeneratorTypes> tableType;
+  PresetSequencePage({super.key, required this.navigatorObj, required this.tableType});
   
   @override
   State<PresetSequencePage> createState() => _PresetSequencePageState();
@@ -133,15 +135,19 @@ class _PresetPageContentState extends State<PresetPageContent> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Row(
+    return SizedBox.expand(
+      child: Stack(
         children: <Widget>[
-          SizedBox(height: 200),
+          Align(
+            alignment: Alignment.center,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(height: 200),
                 Container(
-                  alignment: Alignment.topCenter,
                   child: (_thrownResult != null && _thrownResult.length > 1) ?
                     Text(_thrownResult[1], textAlign: TextAlign.center,) :
-                    Text('text', textAlign: TextAlign.center,),
+                    Text('Киньте кістку', textAlign: TextAlign.center,),
                 ),
                 SizedBox(height: 20),
                 DiceButton(
@@ -155,7 +161,7 @@ class _PresetPageContentState extends State<PresetPageContent> {
                         setState(() {
                           _thrownResult = result;
                           _diceButtonText = buttonText;
-                          
+
                           lastRoll = int.tryParse(result.first.toString()) ?? lastRoll;
                         });
                       },
@@ -163,6 +169,9 @@ class _PresetPageContentState extends State<PresetPageContent> {
                   },
                   buttonText: _diceButtonText,
                 ),
+              ]
+            ),
+          ),
         ],
       ),
     );

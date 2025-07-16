@@ -19,7 +19,7 @@ class _BottomBarState extends State<BottomBar> {
   @override
   void initState() {
     super.initState();
-    presetSequencePage = PresetSequencePage(navigatorObj: widget.navigatorObj, tableType: [GeneratorTypes.DEFAULT],);
+    
     
   }
 
@@ -38,14 +38,14 @@ class _BottomBarState extends State<BottomBar> {
           CommonRoundButton(
             buttonText: "4", 
             onPressedCallback: () {
-              presetSequencePage.tableType = [GeneratorTypes.CHARACTER_WITH_EQUIP];
+              presetSequencePage = PresetSequencePage(navigatorObj: widget.navigatorObj, tableType: GeneratorTypes.CHARACTER_WITH_EQUIP,);
               _startButtonSequence(presetSequencePage);
             }
           ),
           CommonRoundButton(
             buttonText: "1", 
             onPressedCallback: () {
-              presetSequencePage.tableType = [GeneratorTypes.CHARACTER_WITH_EQUIP, GeneratorTypes.KATAFRACT];
+              presetSequencePage = PresetSequencePage(navigatorObj: widget.navigatorObj, tableType: GeneratorTypes.ONLY_CHARACTER,);
               _startButtonSequence(presetSequencePage);
             },
           ),

@@ -24,14 +24,15 @@ class TablesHandler {
     	final Map<String, dynamic> jsonData = json.decode(jsonString);
     	return jsonData;
   	}
-
+    Future<Map<String, dynamic>> loadTableWholeCharacterSequence() async {
+    	final String jsonString = await rootBundle.loadString('lib/assets/tablesStorage/presetSequences/character_creation_sequence.json');
+    	final Map<String, dynamic> jsonData = json.decode(jsonString);
+    	return jsonData;
+  	}
+    
 	List<String> getResult(Map<String, dynamic>? table) {
-		if (table?['dice'].length == 2 && table?['title'] != 'Гроші' &&
-      table?['dice_type'] != 'separate') {
-			int result = rollTwoDeces(int.parse(table?['dice'][0]), int.parse(table?['dice'][1]));
-            return [result.toString(), table?['results'][result.toString()]];
-        } 
-    else if (table?['title'] == 'Гроші') {
+		
+    if (table?['title'] == 'Гроші') {
       List<int> result = rollTwoDecesSeparateValues(int.parse(table?['dice'][0]), int.parse(table?['dice'][1]));
       return [(int.parse(table?['modifier']) + result[0] + result[1]).toString(), result[0].toString(), result[1].toString()];
     }
@@ -39,9 +40,17 @@ class TablesHandler {
       List<int> result = rollTwoDecesSeparateValues(int.parse(table?['dice'][0]), int.parse(table?['dice'][1]));
       return [result[0].toString(), result[1].toString()];
     }
-		else {
-			int result = rollOneDice(int.parse(table?['dice'][0]));
-      return [result.toString(), table?['results'][result.toString()]];
+    else if (table?['dice_type'] == 'combine') {
+      List<int> result = rollTwoDecesSeparateValues(int.parse(table?['dice'][0]), int.parse(table?['dice'][1]));
+      return [result[0].toString(), result[1].toString(), table?['results'][result[0].toString()+result[1].toString()]];
+    }
+    else if (table?['dice'].length == 2) {
+			int result = rollTwoDeces(int.parse(table?['dice'][0]), int.parse(table?['dice'][1]));
+            return [result.toString(), table?['results'][result.toString()]];
+    } 
+	  else {
+	    	int result = rollOneDice(int.parse(table?['dice'][0]));
+        return [result.toString(), table?['results'][result.toString()]];
     }
 	}
 }

@@ -1,0 +1,15 @@
+{
+  "character_creation_sequence": {
+    "tables_character_all": [
+        "tables_character",
+        "tables_character_skills",
+        "tables_character_equipment",
+        "tables_character_extras"
+    ],
+    "tables_only_character": [
+        "tables_character",
+        "tables_character_skills",
+        "tables_character_extras"
+    ]
+  }
+}

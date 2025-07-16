@@ -35,6 +35,7 @@ flutter:
     - lib/assets/tablesStorage/characterTables/tables_character_equipment.json
     - lib/assets/tablesStorage/characterTables/tables_character_extras.json
     - lib/assets/tablesStorage/characterTables/tables_character_skills.json
+    - lib/assets/tablesStorage/presetSequences/character_creation_sequence.json
 
   # To add assets to your application, add an assets section, like this:
   # assets:

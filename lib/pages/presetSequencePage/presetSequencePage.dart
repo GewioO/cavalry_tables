@@ -1,178 +1,186 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:cavalry_table/baseWigets/commonFlatButton.dart';
-import 'package:cavalry_table/fragmentWigets/diceButton/diceButtonWidget.dart';
-import 'package:cavalry_table/fragmentWigets/tablesList/tablesList.dart';
 import 'package:cavalry_table/tablesPaths.dart';
 import 'package:cavalry_table/tablesHandler/tablesHandler.dart';
-import 'package:cavalry_table/fragmentWigets/diceButton/diceButtonLogic.dart';
-import 'package:cavalry_table/fragmentWigets/historyButton/historyButtonWidget.dart';
-import 'package:cavalry_table/fragmentWigets/InstructionButton/InstructionButtonWidget.dart';
-import 'package:cavalry_table/pages/homePage.dart';
 import 'package:cavalry_table/pages/pagesNavigator.dart';
+import 'package:cavalry_table/pages/presetSequencePage/sequencesManager.dart';
+import 'package:cavalry_table/fragmentWigets/diceButton/diceButtonWidget.dart';
 import 'package:cavalry_table/utils/common_constants.dart';
 
 class PresetSequencePage extends StatefulWidget {
   final PagesNavigator navigatorObj;
-  List<GeneratorTypes> tableType;
-  PresetSequencePage({super.key, required this.navigatorObj, required this.tableType});
-  
+  final GeneratorTypes tableType;
+
+  const PresetSequencePage({
+    super.key,
+    required this.navigatorObj,
+    required this.tableType,
+  });
+
   @override
   State<PresetSequencePage> createState() => _PresetSequencePageState();
 }
 
 class _PresetSequencePageState extends State<PresetSequencePage> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final TablesHandler tablesHandler = TablesHandler();
+  final TablesPathes tablesPaths = TablesPathes();
 
-  var tablesHandler = TablesHandler();
-  Map<String, dynamic>? tablesCharacter;
-  Map<String, dynamic>? tablesCharacterEquipment;
-  Map<String, dynamic>? tablesCharacterExtras;
-  Map<String, dynamic>? tablesCharacterSkills;
-  final tablesPaths = TablesPathes();
-  Map<String, dynamic>? selectedTable;
+  Map<String, dynamic> sequenceMap = {};
+  SequenceManager? sequenceManager;
+  Map<String, dynamic>? currentTableData;
+  Map<String, dynamic>? selectedSubtable;
+  List<String>? thrownResult;
+  String diceButtonText = "";
+  String _textLableNaming = "";
+  bool _isWasLastRoll = false;
+  String _textLableResult = "";
+  String savedSom = "";
 
   @override
   void initState() {
     super.initState();
-    tablesHandler.loadTablesCharacter().then((data) {
-      setState(() {
-        tablesCharacter = data['tables_character'];
-        selectedTable = tablesCharacter?["table_1"];
-      });
+    loadSequence();
+  }
+
+  Future<void> loadSequence() async {
+    final sequenceData = await tablesHandler.loadTableWholeCharacterSequence();
+    sequenceMap = sequenceData['character_creation_sequence'];
+    sequenceManager = SequenceManager(
+      sequenceMap: sequenceMap,
+      sequenceType: widget.tableType,
+    );
+    await loadCurrentTable();
+  }
+
+  Future<void> loadCurrentTable() async {
+    if (sequenceManager == null || sequenceManager!.isFinished) {
+      widget.navigatorObj.backPage(context);
+      return;
+    }
+
+    final tableKey = sequenceManager!.currentTableKey;
+    if (tableKey == null) return;
+
+    final data = await loadTableByKey(tableKey);
+    setState(() {
+      currentTableData = data;
+      updateSubtable();
     });
-    tablesHandler.loadTablesCharacterEquipment().then((data) {
-      setState(() {
-        tablesCharacterEquipment = data['tables_character_equipment'];
-      });
+  }
+
+  Future<Map<String, dynamic>?> loadTableByKey(String key) async {
+    switch (key) {
+      case 'tables_character':
+        return (await tablesHandler.loadTablesCharacter())[key];
+      case 'tables_character_skills':
+        return (await tablesHandler.loadTablesCharacterSkills())[key];
+      case 'tables_character_equipment':
+        return (await tablesHandler.loadTablesCharacterEquipment())[key];
+      case 'tables_character_extras':
+        return (await tablesHandler.loadTablesCharacterExtras())[key];
+      default:
+        return null;
+    }
+  }
+
+  void setTextLableAndDiceResult(List<String>? result) {
+    debugPrint("🎲 selectedSubtable?['title']: ${selectedSubtable?['title']}");
+    setState(() {
+      if(selectedSubtable?['dice_type'] == 'combine') {
+        _textLableResult = result![2];
+        diceButtonText = "${result[0]} + ${result[1]}";
+      } 
+      else if(selectedSubtable?['title'] == "Стійкість та удача") {
+        _textLableResult = ([int.parse(result![0]), int.parse(result![1])].reduce(max) + int.parse(savedSom)).toString();
+        diceButtonText = "${result[0]} + ${result[1]}";
+      }
+      else if(selectedSubtable?['title'] == "Гроші") {
+        _textLableResult = result!.first;
+        diceButtonText = "${result[1]} + ${result[2]}";
+      }
+      else {
+        _textLableResult = result![1];
+        diceButtonText = result.first;
+      }
     });
-    tablesHandler.loadTablesCharacterExtras().then((data) {
+  }
+
+  void saveSkills(List<String>? result) {
+      savedSom = result![1];
+  }
+
+  void updateSubtable() {
+    final subKey = "table_${sequenceManager!.currentSubIndex}";
+    final nextTable = currentTableData?[subKey];
+    if (nextTable != null) {
       setState(() {
-        tablesCharacterExtras = data['tables_character_extras'];
+        selectedSubtable = nextTable;
       });
-    });
-    tablesHandler.loadTablesCharacterSkills().then((data) {
+    } 
+    else {
+      if (sequenceManager!.moveNextTable()) {
+        loadCurrentTable();
+      } 
+      else {
+        _isWasLastRoll = true;
+      }
+    }
+  }
+
+  void handleDiceRoll() {
+    if (!_isWasLastRoll){
+      final subtableTitle = selectedSubtable?['title'] ?? '❌ name is abscent';
+      debugPrint("🎲 Using subtable: $subtableTitle");
+      _textLableNaming = selectedSubtable?['title'];
+      final result = tablesHandler.getResult(selectedSubtable);
+      if(selectedSubtable!['title'] == "Соматика (СОМ)") {
+        saveSkills(result);
+      }
       setState(() {
-        tablesCharacterSkills = data['tables_character_skills'];
+        setTextLableAndDiceResult(result);
+        thrownResult = result;
+        debugPrint("🎲 thrownResult: $thrownResult");
+        debugPrint("🎲 savedSom: $savedSom");
       });
-    });
+      sequenceManager!.advanceSubtable();
+      updateSubtable();
+    }
+    else {
+      _isWasLastRoll = false;
+      widget.navigatorObj.backPage(context);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (tablesCharacter == null ||
-        tablesCharacter![tablesCharacter?.keys.first] == null ||
-        tablesCharacter![tablesCharacter?.keys.first]['title'] == null ||
-        tablesCharacterEquipment == null ||
-        tablesCharacterEquipment![tablesCharacterEquipment?.keys.first] == null ||
-        tablesCharacterEquipment![tablesCharacterEquipment?.keys.first]['title'] == null ||
-        tablesCharacterExtras == null ||
-        tablesCharacterExtras![tablesCharacterExtras?.keys.first] == null ||
-        tablesCharacterExtras![tablesCharacterExtras?.keys.first]['title'] == null ||
-        tablesCharacterSkills == null ||
-        tablesCharacterSkills![tablesCharacterSkills?.keys.first] == null ||
-        tablesCharacterSkills![tablesCharacterSkills?.keys.first]['title'] == null) {
-      return const Center(child: CircularProgressIndicator());
+    if (selectedSubtable == null) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
     }
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(''),
-        leading: BackButton(
-          onPressed: () {
-            widget.navigatorObj.backPage(context);
-          },
-        ),
+        leading: BackButton(onPressed: () => widget.navigatorObj.backPage(context)),
+        title: const Text(""),
       ),
-      body: PresetPageContent(
-        tablesHandler: tablesHandler,
-        tablesCharacter: tablesCharacter,
-        selectedTable: selectedTable,
-        onPressedCallback: () {},
-      ),
-    );
-  }
-}
-
-class PresetPageContent extends StatefulWidget {
-  final TablesHandler tablesHandler;
-  final Map<String, dynamic>? tablesCharacter;
-  final Map<String, dynamic>? selectedTable;
-  final VoidCallback onPressedCallback;
-  
-  @override
-  const PresetPageContent({
-    Key? key,
-    required this.tablesHandler,
-    required this.tablesCharacter,
-    required this.selectedTable,
-    required this.onPressedCallback,
-  }) : super(key: key);
-
-  @override
-  State<PresetPageContent> createState() => _PresetPageContentState();
-}
-
-class _PresetPageContentState extends State<PresetPageContent> {
-  final ButtonStyle style = ElevatedButton.styleFrom(textStyle: const TextStyle(fontSize: 20));
-  static const int defaultRollValue = 20;
-  int lastRoll = defaultRollValue;
-  int _diceType = defaultRollValue;
-  String _diceButtonText = defaultRollValue.toString();
-  var _thrownResult;
-  List<int> diceValues = [4, 6, 8, 10, 12, 20, 100];
-
-  @override
-  void didUpdateWidget(covariant PresetPageContent oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.selectedTable != widget.selectedTable && widget.selectedTable != null) {
-      setState(() {
-        _thrownResult = widget.tablesHandler.getResult(widget.selectedTable);
-        lastRoll = int.parse(_thrownResult.first);
-        _diceButtonText = _thrownResult.first;
-      });
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox.expand(
-      child: Stack(
-        children: <Widget>[
-          Align(
-            alignment: Alignment.center,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(height: 200),
-                Container(
-                  child: (_thrownResult != null && _thrownResult.length > 1) ?
-                    Text(_thrownResult[1], textAlign: TextAlign.center,) :
-                    Text('Киньте кістку', textAlign: TextAlign.center,),
-                ),
-                SizedBox(height: 20),
-                DiceButton(
-                  onPressedCallback: () {
-                    handleDiceButtonPressed(
-                      thrownModeSingleDice: false,
-                      tempSelectedTable: widget.selectedTable,
-                      tablesHandler: widget.tablesHandler,
-                      diceType: _diceType,
-                      onResultUpdated: (result, buttonText) {
-                        setState(() {
-                          _thrownResult = result;
-                          _diceButtonText = buttonText;
-
-                          lastRoll = int.tryParse(result.first.toString()) ?? lastRoll;
-                        });
-                      },
-                    );
-                  },
-                  buttonText: _diceButtonText,
-                ),
-              ]
+      body: Center(
+        child: Column(
+          children: [
+            const SizedBox(height: 200),
+            Text(
+              (thrownResult != null && thrownResult!.length > 1)
+                  ? ("$_textLableNaming: $_textLableResult")
+                  : 'Киньте кістку',
+              textAlign: TextAlign.center,
             ),
-          ),
-        ],
+            const SizedBox(height: 20),
+            DiceButton(
+              onPressedCallback: handleDiceRoll,
+              buttonText: diceButtonText,
+            )
+          ],
+        ),
       ),
     );
   }

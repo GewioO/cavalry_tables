@@ -36,22 +36,26 @@ class _BottomBarState extends State<BottomBar> {
       child: Row(
         children: <Widget>[
           CommonRoundButton(
-            buttonText: "4", 
+            buttonText: "CHARACTER_WITH_EQUIP", 
             onPressedCallback: () {
               presetSequencePage = PresetSequencePage(navigatorObj: widget.navigatorObj, tableType: GeneratorTypes.CHARACTER_WITH_EQUIP,);
               _startButtonSequence(presetSequencePage);
             }
           ),
           CommonRoundButton(
-            buttonText: "1", 
+            buttonText: "ONLY_CHARACTER", 
             onPressedCallback: () {
               presetSequencePage = PresetSequencePage(navigatorObj: widget.navigatorObj, tableType: GeneratorTypes.ONLY_CHARACTER,);
               _startButtonSequence(presetSequencePage);
             },
           ),
-          CommonRoundButton(buttonText: "1", onPressedCallback: () {},),
-          CommonRoundButton(buttonText: "1", onPressedCallback: () {},),
-          CommonRoundButton(buttonText: "1", onPressedCallback: () {},),
+          CommonRoundButton(
+            buttonText: "KATAFRACT", 
+            onPressedCallback: () {
+              presetSequencePage = PresetSequencePage(navigatorObj: widget.navigatorObj, tableType: GeneratorTypes.KATAFRACT,);
+              _startButtonSequence(presetSequencePage);
+            },
+          )
         ],
       ),
     );

@@ -4,12 +4,16 @@
         "tables_character",
         "tables_character_skills",
         "tables_character_equipment",
-        "tables_character_extras"
+        "tables_character_extras",
+        "tables_character_katafract"
     ],
     "tables_only_character": [
         "tables_character",
         "tables_character_skills",
         "tables_character_extras"
+    ],
+    "tables_only_katafract": [
+        "tables_character_katafract"
     ]
   }
 }

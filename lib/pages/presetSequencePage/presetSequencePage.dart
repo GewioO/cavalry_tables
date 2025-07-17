@@ -29,6 +29,7 @@ class _PresetSequencePageState extends State<PresetSequencePage> {
   SequenceManager? sequenceManager;
   Map<String, dynamic>? currentTableData;
   Map<String, dynamic>? selectedSubtable;
+  Map<String, dynamic>? characterSavedList;
   List<String>? thrownResult;
   String diceButtonText = "";
   String _textLableNaming = "";
@@ -43,6 +44,7 @@ class _PresetSequencePageState extends State<PresetSequencePage> {
   }
 
   Future<void> loadSequence() async {
+    debugPrint("🎲 tableType: ${widget.tableType}");
     final sequenceData = await tablesHandler.loadTableWholeCharacterSequence();
     sequenceMap = sequenceData['character_creation_sequence'];
     sequenceManager = SequenceManager(
@@ -78,6 +80,8 @@ class _PresetSequencePageState extends State<PresetSequencePage> {
         return (await tablesHandler.loadTablesCharacterEquipment())[key];
       case 'tables_character_extras':
         return (await tablesHandler.loadTablesCharacterExtras())[key];
+      case 'tables_character_katafract':
+        return (await tablesHandler.loadTablesCharacterKatafract())[key];
       default:
         return null;
     }

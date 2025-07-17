@@ -14,12 +14,13 @@ class SequenceManager {
   String? get _sequenceKey {
     switch (sequenceType) {
       case GeneratorTypes.CHARACTER_WITH_EQUIP:
+        return "tables_character_all";
       case GeneratorTypes.DEFAULT:
         return "tables_character_all";
       case GeneratorTypes.ONLY_CHARACTER:
         return "tables_only_character";
       case GeneratorTypes.KATAFRACT:
-        return null;
+        return "tables_only_katafract";
     }
   }
 

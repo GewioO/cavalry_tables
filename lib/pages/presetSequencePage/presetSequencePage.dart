@@ -6,6 +6,7 @@ import 'package:cavalry_table/pages/pagesNavigator.dart';
 import 'package:cavalry_table/pages/presetSequencePage/sequencesManager.dart';
 import 'package:cavalry_table/fragmentWigets/diceButton/diceButtonWidget.dart';
 import 'package:cavalry_table/utils/common_constants.dart';
+import 'package:cavalry_table/pages/characterListPage.dart';
 
 class PresetSequencePage extends StatefulWidget {
   final PagesNavigator navigatorObj;
@@ -29,7 +30,7 @@ class _PresetSequencePageState extends State<PresetSequencePage> {
   SequenceManager? sequenceManager;
   Map<String, dynamic>? currentTableData;
   Map<String, dynamic>? selectedSubtable;
-  Map<String, dynamic>? characterSavedList;
+  late Map<String, dynamic> characterSavedList;
   List<String>? thrownResult;
   String diceButtonText = "";
   String _textLableNaming = "";
@@ -52,6 +53,7 @@ class _PresetSequencePageState extends State<PresetSequencePage> {
       sequenceType: widget.tableType,
     );
     await loadCurrentTable();
+    characterSavedList = await tablesHandler.loadGenerationResultsList();
   }
 
   Future<void> loadCurrentTable() async {
@@ -140,6 +142,7 @@ class _PresetSequencePageState extends State<PresetSequencePage> {
       if(selectedSubtable!['title'] == "Соматика (СОМ)") {
         saveSkills(result);
       }
+      saveGeneratedResult(sequenceManager!.getSavedGenerationMappingKey(selectedSubtable!['title']), result);
       setState(() {
         setTextLableAndDiceResult(result);
         thrownResult = result;
@@ -151,7 +154,27 @@ class _PresetSequencePageState extends State<PresetSequencePage> {
     }
     else {
       _isWasLastRoll = false;
-      widget.navigatorObj.backPage(context);
+      CharacterListPage characterListPage = CharacterListPage(navigatorObj: widget.navigatorObj, characterSavedList: characterSavedList);
+      widget.navigatorObj.changePage(context, characterListPage);
+    }
+  }
+
+  void saveGeneratedResult(List<String> key, List<String> result) {
+    if (key.isNotEmpty) {
+      debugPrint("✅ Saved value $key → $result");
+      //find value here
+      if (key[0] == "stability") {
+
+      }
+      else if (key[0].isNotEmpty) {
+        characterSavedList[key[0]] = "${characterSavedList[key[0]]} $result";
+      }
+      else {
+        characterSavedList[key[0]] = result;
+      }
+    } 
+    else {
+      debugPrint("⚠️ Key '$key' not find characterSavedList");
     }
   }
 

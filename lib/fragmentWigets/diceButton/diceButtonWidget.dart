@@ -94,14 +94,25 @@ class _DiceButtonState extends State<DiceButton>
                 const FaIcon(
                     FontAwesomeIcons.diceD20,
                     size: 150,
-                    color: Colors.black, // сам дайс чорного кольору
+                    color: Colors.black,
+                    
                 ),
                 Text(
                     widget.buttonText,
-                    style: const TextStyle(
+                    style: TextStyle(
                         fontSize: 26,
-                        color: Colors.white,
                         fontWeight: FontWeight.bold,
+                        foreground: Paint()
+                            ..style = PaintingStyle.stroke
+                            ..strokeWidth = 3
+                            ..color = Colors.black,
+                    ),
+                ),
+                Text(
+                    widget.buttonText,
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 26,
                     ),
                 ),
             ],

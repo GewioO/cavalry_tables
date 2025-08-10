@@ -92,19 +92,19 @@ class _PresetSequencePageState extends State<PresetSequencePage> {
   void setTextLableAndDiceResult(List<String>? result) {
     debugPrint("🎲 selectedSubtable?['title']: ${selectedSubtable?['title']}");
     setState(() {
-      if(selectedSubtable?['dice_type'] == 'combine') {
+      if (selectedSubtable?['dice_type'] == 'combine') {
         _textLableResult = result![2];
         diceButtonText = "${result[0]} + ${result[1]}";
-      } 
-      else if(selectedSubtable?['title'] == "Стійкість та удача") {
-        _textLableResult = ([int.parse(result![0]), int.parse(result![1])].reduce(max) + int.parse(savedSom)).toString();
+      } else if (selectedSubtable?['title'] == "Стійкість та удача") {
+        _textLableResult =
+            ([int.parse(result![0]), int.parse(result![1])].reduce(max) +
+                    int.parse(savedSom))
+                .toString();
         diceButtonText = "${result[0]} + ${result[1]}";
-      }
-      else if(selectedSubtable?['title'] == "Гроші") {
+      } else if (selectedSubtable?['title'] == "Гроші") {
         _textLableResult = result!.first;
         diceButtonText = "${result[1]} + ${result[2]}";
-      }
-      else {
+      } else {
         _textLableResult = result![1];
         diceButtonText = result.first;
       }
@@ -112,7 +112,7 @@ class _PresetSequencePageState extends State<PresetSequencePage> {
   }
 
   void saveSkills(List<String>? result) {
-      savedSom = result![1];
+    savedSom = result![1];
   }
 
   void updateSubtable() {
@@ -122,27 +122,30 @@ class _PresetSequencePageState extends State<PresetSequencePage> {
       setState(() {
         selectedSubtable = nextTable;
       });
-    } 
-    else {
+    } else {
       if (sequenceManager!.moveNextTable()) {
         loadCurrentTable();
-      } 
-      else {
+      } else {
         _isWasLastRoll = true;
       }
     }
   }
 
   void handleDiceRoll() {
-    if (!_isWasLastRoll){
+    if (!_isWasLastRoll) {
       final subtableTitle = selectedSubtable?['title'] ?? '❌ name is abscent';
       debugPrint("🎲 Using subtable: $subtableTitle");
       _textLableNaming = selectedSubtable?['title'];
       final result = tablesHandler.getResult(selectedSubtable);
-      if(selectedSubtable!['title'] == "Соматика (СОМ)") {
+      if (selectedSubtable!['title'] == "Соматика (СОМ)") {
         saveSkills(result);
       }
-      saveGeneratedResult(sequenceManager!.getSavedGenerationMappingKey(selectedSubtable!['title']), result);
+      saveGeneratedResult(
+        sequenceManager!.getSavedGenerationMappingKey(
+          selectedSubtable!['title'],
+        ),
+        result,
+      );
       setState(() {
         setTextLableAndDiceResult(result);
         thrownResult = result;
@@ -151,10 +154,12 @@ class _PresetSequencePageState extends State<PresetSequencePage> {
       });
       sequenceManager!.advanceSubtable();
       updateSubtable();
-    }
-    else {
+    } else {
       _isWasLastRoll = false;
-      CharacterListPage characterListPage = CharacterListPage(navigatorObj: widget.navigatorObj, characterSavedList: characterSavedList);
+      CharacterListPage characterListPage = CharacterListPage(
+        navigatorObj: widget.navigatorObj,
+        characterSavedList: characterSavedList,
+      );
       widget.navigatorObj.changePage(context, characterListPage);
     }
   }
@@ -162,18 +167,17 @@ class _PresetSequencePageState extends State<PresetSequencePage> {
   void saveGeneratedResult(List<String> key, List<String> result) {
     if (key.isNotEmpty) {
       debugPrint("✅ Saved value $key → $result");
-      //find value here
       if (key[0] == "stability") {
+      } else if (key[0].isNotEmpty) {
+        for (var item in result) {
+          characterSavedList[key[0]].add(item.toString());
+        }
 
-      }
-      else if (key[0].isNotEmpty) {
-        characterSavedList[key[0]] = "${characterSavedList[key[0]]} $result";
-      }
-      else {
+        debugPrint("!!!!! ${characterSavedList[key[0]]}");
+      } else {
         characterSavedList[key[0]] = result;
       }
-    } 
-    else {
+    } else {
       debugPrint("⚠️ Key '$key' not find characterSavedList");
     }
   }
@@ -181,14 +185,14 @@ class _PresetSequencePageState extends State<PresetSequencePage> {
   @override
   Widget build(BuildContext context) {
     if (selectedSubtable == null) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
     return Scaffold(
       appBar: AppBar(
-        leading: BackButton(onPressed: () => widget.navigatorObj.backPage(context)),
+        leading: BackButton(
+          onPressed: () => widget.navigatorObj.backPage(context),
+        ),
         title: const Text(""),
       ),
       body: Center(
@@ -205,7 +209,7 @@ class _PresetSequencePageState extends State<PresetSequencePage> {
             DiceButton(
               onPressedCallback: handleDiceRoll,
               buttonText: diceButtonText,
-            )
+            ),
           ],
         ),
       ),

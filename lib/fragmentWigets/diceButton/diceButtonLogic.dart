@@ -1,7 +1,8 @@
 import 'package:cavalry_table/tablesHandler/tablesHandler.dart';
 import 'package:flutter/material.dart';
 
-typedef ThrownResultCallback = void Function(List<dynamic> result, String buttonText);
+typedef ThrownResultCallback =
+    void Function(List<dynamic> result, String buttonText);
 
 void handleDiceButtonPressed({
   required bool thrownModeSingleDice,
@@ -12,7 +13,9 @@ void handleDiceButtonPressed({
 }) {
   List<dynamic> result;
   String buttonText;
-  if (tempSelectedTable != null && tempSelectedTable.isNotEmpty && !thrownModeSingleDice) {
+  if (tempSelectedTable != null &&
+      tempSelectedTable.isNotEmpty &&
+      !thrownModeSingleDice) {
     result = tablesHandler.getResult(tempSelectedTable);
 
     if (tempSelectedTable['title'] == 'гроші') {
@@ -33,5 +36,7 @@ void handleDiceButtonPressed({
 }
 
 int _rollOneDice(int sides) {
-  return (1 + (sides * (new DateTime.now().microsecondsSinceEpoch % 1000000) / 1000000)).floor();
+  return (1 +
+          (sides * (DateTime.now().microsecondsSinceEpoch % 1000000) / 1000000))
+      .floor();
 }

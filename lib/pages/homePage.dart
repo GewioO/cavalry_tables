@@ -35,7 +35,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    navigatorObj = new PagesNavigator(HomePage());
+    navigatorObj = PagesNavigator(HomePage());
     tablesHandler.loadTablesCharacter().then((data) {
       setState(() {
         tablesCharacter = data['tables_character'];
@@ -92,14 +92,20 @@ class _HomePageState extends State<HomePage> {
         tablesCharacter![tablesCharacter?.keys.first] == null ||
         tablesCharacter![tablesCharacter?.keys.first]['title'] == null ||
         tablesCharacterEquipment == null ||
-        tablesCharacterEquipment![tablesCharacterEquipment?.keys.first] == null ||
-        tablesCharacterEquipment![tablesCharacterEquipment?.keys.first]['title'] == null ||
+        tablesCharacterEquipment![tablesCharacterEquipment?.keys.first] ==
+            null ||
+        tablesCharacterEquipment![tablesCharacterEquipment
+                ?.keys
+                .first]['title'] ==
+            null ||
         tablesCharacterExtras == null ||
         tablesCharacterExtras![tablesCharacterExtras?.keys.first] == null ||
-        tablesCharacterExtras![tablesCharacterExtras?.keys.first]['title'] == null ||
+        tablesCharacterExtras![tablesCharacterExtras?.keys.first]['title'] ==
+            null ||
         tablesCharacterSkills == null ||
         tablesCharacterSkills![tablesCharacterSkills?.keys.first] == null ||
-        tablesCharacterSkills![tablesCharacterSkills?.keys.first]['title'] == null) {
+        tablesCharacterSkills![tablesCharacterSkills?.keys.first]['title'] ==
+            null) {
       return const Center(child: CircularProgressIndicator());
     }
 
@@ -115,7 +121,7 @@ class _HomePageState extends State<HomePage> {
       ),
       bottomNavigationBar: BottomAppBar(
         shape: const CircularNotchedRectangle(),
-        child: BottomBar(navigatorObj: navigatorObj,),
+        child: BottomBar(navigatorObj: navigatorObj),
       ),
       endDrawer: Drawer(
         child: Tableslist(
@@ -138,16 +144,16 @@ class HomePageContent extends StatefulWidget {
   final Map<String, dynamic>? selectedTable;
   final Map<String, dynamic>? tempSelectedTable;
   final VoidCallback onPressedCallback;
-  final bool isSingleThrown; 
+  final bool isSingleThrown;
   const HomePageContent({
-    Key? key,
+    super.key,
     required this.tablesHandler,
     required this.tablesCharacter,
     required this.selectedTable,
     required this.tempSelectedTable,
     required this.onPressedCallback,
     required this.isSingleThrown,
-  }) : super(key: key);
+  });
 
   @override
   State<HomePageContent> createState() => _HomePageContentState();
@@ -161,7 +167,7 @@ class _HomePageContentState extends State<HomePageContent> {
   var _thrownResult;
   bool _thrownModeSingleDice = false;
   List<int> diceValues = [4, 6, 8, 10, 12, 20, 100];
-  
+
   @override
   void initState() {
     super.initState();
@@ -178,7 +184,8 @@ class _HomePageContentState extends State<HomePageContent> {
         _thrownModeSingleDice = widget.isSingleThrown;
       });
     }
-    if (oldWidget.selectedTable != widget.selectedTable && widget.selectedTable != null) {
+    if (oldWidget.selectedTable != widget.selectedTable &&
+        widget.selectedTable != null) {
       setState(() {
         _thrownResult = widget.tablesHandler.getResult(widget.selectedTable);
         lastRoll = int.parse(_thrownResult.first);
@@ -189,7 +196,7 @@ class _HomePageContentState extends State<HomePageContent> {
 
   void _changeExpandedValue() {
     setState(() {
-      _expandedDicesList = _expandedDicesList?false:true;
+      _expandedDicesList = _expandedDicesList ? false : true;
     });
   }
 
@@ -206,63 +213,71 @@ class _HomePageContentState extends State<HomePageContent> {
   //change dice tiles on builder
   @override
   Widget build(BuildContext context) {
-    return SizedBox.expand (
+    return SizedBox.expand(
       child: Stack(
         children: <Widget>[
           Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-                SizedBox(height: 200),
-                Container(
-                  alignment: Alignment.topCenter,
-                  child: (!_thrownModeSingleDice && _thrownResult != null && _thrownResult.length > 1) ?
-                    Text(_thrownResult[1], textAlign: TextAlign.center,) :
-                    Container(),
-                ),
-                SizedBox(height: 20),
-                _expandedDicesList?
-                Container():
-                DiceButton(
-                  onPressedCallback: () {
-                    handleDiceButtonPressed(
-                      thrownModeSingleDice: _thrownModeSingleDice,
-                      tempSelectedTable: widget.tempSelectedTable,
-                      tablesHandler: widget.tablesHandler,
-                      diceType: _diceType,
-                      onResultUpdated: (result, buttonText) {
-                        setState(() {
-                          _thrownResult = result;
-                          _diceButtonText = buttonText;
-                          lastRoll = int.tryParse(result.first.toString()) ?? lastRoll;
-                        });
-                      }
-                    );
-                  },
-                  buttonText: _diceButtonText,
-                ),
-                Container(
-                    alignment: Alignment.center,
-                    child: ConstrainedBox(
-                      constraints: BoxConstraints(maxWidth: 250),
-                      child: ExpansionTile(title: Text('Обери кістку'),
-                        initiallyExpanded: _expandedDicesList,
-                        onExpansionChanged:(bool expanded) {
-                          _changeExpandedValue();
+              SizedBox(height: 200),
+              Container(
+                alignment: Alignment.topCenter,
+                child:
+                    (!_thrownModeSingleDice &&
+                            _thrownResult != null &&
+                            _thrownResult.length > 1)
+                        ? Text(_thrownResult[1], textAlign: TextAlign.center)
+                        : Container(),
+              ),
+              SizedBox(height: 20),
+              _expandedDicesList
+                  ? Container()
+                  : DiceButton(
+                    onPressedCallback: () {
+                      handleDiceButtonPressed(
+                        thrownModeSingleDice: _thrownModeSingleDice,
+                        tempSelectedTable: widget.tempSelectedTable,
+                        tablesHandler: widget.tablesHandler,
+                        diceType: _diceType,
+                        onResultUpdated: (result, buttonText) {
+                          setState(() {
+                            _thrownResult = result;
+                            _diceButtonText = buttonText;
+                            lastRoll =
+                                int.tryParse(result.first.toString()) ??
+                                lastRoll;
+                          });
                         },
-                        children: diceValues.map((value) {
+                      );
+                    },
+                    buttonText: _diceButtonText,
+                  ),
+              Container(
+                alignment: Alignment.center,
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(maxWidth: 250),
+                  child: ExpansionTile(
+                    title: Text('Обери кістку'),
+                    initiallyExpanded: _expandedDicesList,
+                    onExpansionChanged: (bool expanded) {
+                      _changeExpandedValue();
+                    },
+                    children:
+                        diceValues.map((value) {
                           return CommonFlatButton(
                             buttonText: value.toString(),
                             onPressedCallback: () => _changeDiceType(value),
                           );
-                        }).toList(),),
-                    ),
+                        }).toList(),
+                  ),
                 ),
+              ),
             ],
           ),
           HistoryButton(),
           InstructionButton(),
         ],
-      )
+      ),
     );
   }
 }

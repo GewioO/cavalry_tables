@@ -19,16 +19,15 @@ class _BottomBarState extends State<BottomBar> {
   @override
   void initState() {
     super.initState();
-    
-    
   }
 
   @override
   Widget build(BuildContext context) {
-    final ButtonStyle style = ElevatedButton.styleFrom(textStyle: const TextStyle(fontSize: 20));
+    final ButtonStyle style = ElevatedButton.styleFrom(
+      textStyle: const TextStyle(fontSize: 20),
+    );
 
-    void _startButtonSequence(Widget pageWithType)
-    {
+    void startButtonSequence(Widget pageWithType) {
       startTransitionButtonSequence(context, pageWithType, widget.navigatorObj);
     }
 
@@ -36,26 +35,35 @@ class _BottomBarState extends State<BottomBar> {
       child: Row(
         children: <Widget>[
           CommonRoundButton(
-            buttonText: "CHARACTER_WITH_EQUIP", 
+            buttonText: "CHARACTER_WITH_EQUIP",
             onPressedCallback: () {
-              presetSequencePage = PresetSequencePage(navigatorObj: widget.navigatorObj, tableType: GeneratorTypes.CHARACTER_WITH_EQUIP,);
-              _startButtonSequence(presetSequencePage);
-            }
-          ),
-          CommonRoundButton(
-            buttonText: "ONLY_CHARACTER", 
-            onPressedCallback: () {
-              presetSequencePage = PresetSequencePage(navigatorObj: widget.navigatorObj, tableType: GeneratorTypes.ONLY_CHARACTER,);
-              _startButtonSequence(presetSequencePage);
+              presetSequencePage = PresetSequencePage(
+                navigatorObj: widget.navigatorObj,
+                tableType: GeneratorTypes.CHARACTER_WITH_EQUIP,
+              );
+              startButtonSequence(presetSequencePage);
             },
           ),
           CommonRoundButton(
-            buttonText: "KATAFRACT", 
+            buttonText: "ONLY_CHARACTER",
             onPressedCallback: () {
-              presetSequencePage = PresetSequencePage(navigatorObj: widget.navigatorObj, tableType: GeneratorTypes.KATAFRACT,);
-              _startButtonSequence(presetSequencePage);
+              presetSequencePage = PresetSequencePage(
+                navigatorObj: widget.navigatorObj,
+                tableType: GeneratorTypes.ONLY_CHARACTER,
+              );
+              startButtonSequence(presetSequencePage);
             },
-          )
+          ),
+          CommonRoundButton(
+            buttonText: "KATAFRACT",
+            onPressedCallback: () {
+              presetSequencePage = PresetSequencePage(
+                navigatorObj: widget.navigatorObj,
+                tableType: GeneratorTypes.KATAFRACT,
+              );
+              startButtonSequence(presetSequencePage);
+            },
+          ),
         ],
       ),
     );

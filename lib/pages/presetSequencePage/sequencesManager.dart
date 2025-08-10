@@ -6,10 +6,7 @@ class SequenceManager {
   int currentTableIndex = 0;
   int currentSubtableIndex = 1;
 
-  SequenceManager({
-    required this.sequenceMap,
-    required this.sequenceType,
-  });
+  SequenceManager({required this.sequenceMap, required this.sequenceType});
 
   String? get _sequenceKey {
     switch (sequenceType) {
@@ -61,15 +58,17 @@ class SequenceManager {
   }
 
   List<String> getSavedGenerationMappingKey(String title) {
-    switch(title){
+    switch (title) {
       case "Особливість персонажа":
         return ["peculiarity"];
       case "Рідний світ персонажа":
         return ["home_world"];
       case "Передісторія персонажа":
         return ["prehistory"];
-      case "Навички персонажа 1" || "Навички персонажа 2" || 
-        "Навички персонажа 3" || "Навички персонажа 4":
+      case "Навички персонажа 1" ||
+          "Навички персонажа 2" ||
+          "Навички персонажа 3" ||
+          "Навички персонажа 4":
         return ["skills"];
       case "Соматика (СОМ)":
         return ["somatic"];
@@ -109,7 +108,8 @@ class SequenceManager {
         return ["katafract_womb"];
       case "Відмітини":
         return ["katafract_marks"];
-      case "Імена Скрижалі Дарованих Імен 1" || "Імена Скрижалі Дарованих Імен 2":
+      case "Імена Скрижалі Дарованих Імен 1" ||
+          "Імена Скрижалі Дарованих Імен 2":
         return ["katafract_name"];
       case "Каркас":
         return ["katafract_carcass"];

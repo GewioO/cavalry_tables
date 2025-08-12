@@ -240,6 +240,19 @@ class _PresetSequencePageState extends State<PresetSequencePage> {
         widget.navigatorObj.changePage(context, characterListPage);
     }
 
+    int _getDiceSides() {
+        if (selectedSubtable != null) {
+            if (selectedSubtable!['dice_type'] == 'separate' ||
+                selectedSubtable!['dice_type'] == 'combine' ||
+                (selectedSubtable!['dice'] as List).length == 2) {
+                return 0; // To show dice-alt icon
+            } else {
+                return int.tryParse(selectedSubtable!['dice'][0].toString()) ?? 0;
+            }
+        }
+        return 0;
+    }
+
     @override
     Widget build(BuildContext context) {
         if (selectedSubtable == null) {
@@ -265,6 +278,7 @@ class _PresetSequencePageState extends State<PresetSequencePage> {
                         ),
                         const SizedBox(height: 20),
                         DiceButton(
+                            diceSides: _getDiceSides(),
                             onPressedCallback: handleDiceRoll,
                             buttonText: diceButtonText,
                         ),

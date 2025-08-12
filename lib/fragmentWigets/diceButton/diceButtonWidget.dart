@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class DiceButton extends StatefulWidget {
     final String buttonText;
     final VoidCallback onPressedCallback;
+    final int diceSides;
 
     const DiceButton({
         super.key,
         required this.buttonText,
         required this.onPressedCallback,
+        required this.diceSides,
     });
 
     @override
@@ -31,7 +32,6 @@ class _DiceButtonState extends State<DiceButton>
             vsync: this,
         );
 
-        // Ключовий tween для "стрибка" з затуханням (кілька відскоків)
         _offsetYAnimation = TweenSequence<double>([
             TweenSequenceItem(
                 tween: Tween<double>(
@@ -87,14 +87,23 @@ class _DiceButtonState extends State<DiceButton>
         super.dispose();
     }
 
+    String _getDiceIconPath() {
+        final availableIcons = [4, 6, 8, 10, 12, 20, 100];
+        if (availableIcons.contains(widget.diceSides)) {
+            return 'lib/assets/icons/dices/dice-d${widget.diceSides}.png';
+        } else {
+            return 'lib/assets/icons/dices/dice-alt.png';
+        }
+    }
+
     Widget _buildDiceFace() {
         return Stack(
             alignment: Alignment.center,
             children: [
-                const FaIcon(
-                    FontAwesomeIcons.diceD20,
-                    size: 150,
-                    color: Colors.black,
+                Image.asset(
+                    _getDiceIconPath(),
+                    width: 150,
+                    height: 150,
                     
                 ),
                 Text(
@@ -110,7 +119,7 @@ class _DiceButtonState extends State<DiceButton>
                 ),
                 Text(
                     widget.buttonText,
-                    style: TextStyle(
+                    style: const TextStyle(
                         color: Colors.white,
                         fontSize: 26,
                     ),

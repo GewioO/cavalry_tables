@@ -39,6 +39,7 @@ flutter:
     - lib/assets/tablesStorage/characterTables/tables_character_katafract.json
     - lib/assets/tablesStorage/presetSequences/character_creation_sequence.json
     - lib/assets/tablesStorage/generationResultsTables/generation_results.json
+    - lib/assets/icons/dices/
 
   # To add assets to your application, add an assets section, like this:
   # assets:

@@ -233,6 +233,7 @@ class _HomePageContentState extends State<HomePageContent> {
                             _expandedDicesList
                                 ? Container()
                                 : DiceButton(
+                                    diceSides: _diceType,
                                     onPressedCallback: () {
                                         handleDiceButtonPressed(
                                             thrownModeSingleDice: _thrownModeSingleDice,

@@ -6,7 +6,7 @@ import 'package:cavalry_table/fragmentWigets/tablesList/tablesList.dart';
 import 'package:cavalry_table/tablesPaths.dart';
 import 'package:cavalry_table/tablesHandler/tablesHandler.dart';
 import 'package:cavalry_table/fragmentWigets/diceButton/diceButtonLogic.dart';
-import 'package:cavalry_table/fragmentWigets/historyButton/historyButtonWidget.dart';
+import 'package:cavalry_table/fragmentWigets/savedCharactersButton/savedCharactersButtonWidget.dart';
 import 'package:cavalry_table/fragmentWigets/InstructionButton/InstructionButtonWidget.dart';
 import 'package:cavalry_table/pages/pagesNavigator.dart';
 import 'package:cavalry_table/utils/common_constants.dart';
@@ -118,6 +118,8 @@ class _HomePageState extends State<HomePage> {
                 tempSelectedTable: tempSelectedTable,
                 isSingleThrown: isSingleThrown,
                 onPressedCallback: changeSingleThrownValue,
+                navigatorObj: navigatorObj,
+                characterSavedList: const {}, // Passing empty map for now
             ),
             bottomNavigationBar: BottomAppBar(
                 shape: const CircularNotchedRectangle(),
@@ -145,6 +147,9 @@ class HomePageContent extends StatefulWidget {
     final Map<String, dynamic>? tempSelectedTable;
     final VoidCallback onPressedCallback;
     final bool isSingleThrown;
+    final PagesNavigator navigatorObj;
+    final Map<String, dynamic> characterSavedList;
+
     const HomePageContent({
         super.key,
         required this.tablesHandler,
@@ -153,6 +158,8 @@ class HomePageContent extends StatefulWidget {
         required this.tempSelectedTable,
         required this.onPressedCallback,
         required this.isSingleThrown,
+        required this.navigatorObj,
+        required this.characterSavedList,
     });
 
     @override
@@ -275,7 +282,10 @@ class _HomePageContentState extends State<HomePageContent> {
                             ),
                         ],
                     ),
-                    HistoryButton(),
+                    SavedCharactersButton(
+                        navigatorObj: widget.navigatorObj,
+                        characterSavedList: widget.characterSavedList,
+                    ),
                     InstructionButton(),
                 ],
             ),

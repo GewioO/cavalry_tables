@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:cavalry_table/pages/homePage.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:cavalry_table/pages/pagesNavigator.dart';
@@ -75,38 +76,16 @@ class _CharacterListPageState extends State<CharacterListPage> {
         }
     }
 
-    Future<void> _clearSavedCharacters() async {
-        try {
-            final directory = await getApplicationDocumentsDirectory();
-            final dir = Directory(directory.path);
-            final List<FileSystemEntity> entities = await dir.list().toList();
-            int deleteCount = 0;
-
-            for (FileSystemEntity entity in entities) {
-                if (entity is File && entity.path.contains('saved_character_')) {
-                    await entity.delete();
-                    deleteCount++;
-                }
-            }
-
-            ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                    content: Text('Successfully deleted $deleteCount character files.'),
-                ),
-            );
-        } catch (e) {
-            ScaffoldMessenger.of(
-                context,
-            ).showSnackBar(SnackBar(content: Text('Error clearing characters: $e')));
-        }
-    }
-
     @override
     Widget build(BuildContext context) {
         return Scaffold(
             appBar: AppBar(
                 leading: BackButton(
-                    onPressed: () => widget.navigatorObj.backPage(context),
+                    onPressed: () => Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(builder: (context) => const HomePage()),
+                        (Route<dynamic> route) => false,
+                ),
                 ),
                 title: const Text("Character Sheet"),
             ),
@@ -156,29 +135,12 @@ class _CharacterListPageState extends State<CharacterListPage> {
                     ),
                     Padding(
                         padding: const EdgeInsets.all(16.0),
-                        child: Row(
-                            children: [
-                                Expanded(
-                                    child: ElevatedButton(
-                                        onPressed: _saveChanges,
-                                        style: ElevatedButton.styleFrom(
-                                            minimumSize: Size(double.infinity, 50),
-                                        ),
-                                        child: const Text("Save Character"),
-                                    ),
-                                ),
-                                SizedBox(width: 16.0),
-                                Expanded(
-                                    child: ElevatedButton(
-                                        onPressed: _clearSavedCharacters,
-                                        style: ElevatedButton.styleFrom(
-                                            backgroundColor: Colors.redAccent,
-                                            minimumSize: Size(double.infinity, 50),
-                                        ),
-                                        child: const Text("Clear All"),
-                                    ),
-                                ),
-                            ],
+                        child: ElevatedButton(
+                            onPressed: _saveChanges,
+                            style: ElevatedButton.styleFrom(
+                                minimumSize: Size(double.infinity, 50),
+                            ),
+                            child: const Text("Save Character"),
                         ),
                     ),
                 ],

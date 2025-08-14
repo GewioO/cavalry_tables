@@ -119,7 +119,6 @@ class _HomePageState extends State<HomePage> {
                 isSingleThrown: isSingleThrown,
                 onPressedCallback: changeSingleThrownValue,
                 navigatorObj: navigatorObj,
-                characterSavedList: const {}, // Passing empty map for now
             ),
             bottomNavigationBar: BottomAppBar(
                 shape: const CircularNotchedRectangle(),
@@ -148,7 +147,6 @@ class HomePageContent extends StatefulWidget {
     final VoidCallback onPressedCallback;
     final bool isSingleThrown;
     final PagesNavigator navigatorObj;
-    final Map<String, dynamic> characterSavedList;
 
     const HomePageContent({
         super.key,
@@ -159,7 +157,6 @@ class HomePageContent extends StatefulWidget {
         required this.onPressedCallback,
         required this.isSingleThrown,
         required this.navigatorObj,
-        required this.characterSavedList,
     });
 
     @override
@@ -217,7 +214,6 @@ class _HomePageContentState extends State<HomePageContent> {
         });
     }
 
-    //change dice tiles on builder
     @override
     Widget build(BuildContext context) {
         return SizedBox.expand(
@@ -284,7 +280,6 @@ class _HomePageContentState extends State<HomePageContent> {
                     ),
                     SavedCharactersButton(
                         navigatorObj: widget.navigatorObj,
-                        characterSavedList: widget.characterSavedList,
                     ),
                     InstructionButton(),
                 ],

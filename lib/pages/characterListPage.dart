@@ -45,12 +45,12 @@ class _CharacterListPageState extends State<CharacterListPage> {
             final dirPath = directory.path;
             int nextFileNumber = 1;
             while (await File(
-                '$dirPath/saved_character_$nextFileNumber.json',
+                '$dirPath/персонаж_$nextFileNumber.json',
             ).exists()) {
                 nextFileNumber++;
             }
 
-            final filePath = '$dirPath/saved_character_$nextFileNumber.json';
+            final filePath = '$dirPath/персонаж_$nextFileNumber.json';
             final file = File(filePath);
 
             Map<String, dynamic> updatedData = {};

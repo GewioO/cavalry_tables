@@ -1,15 +1,13 @@
-import 'package:cavalry_table/pages/characterListPage.dart';
 import 'package:cavalry_table/pages/pagesNavigator.dart';
+import 'package:cavalry_table/pages/savedCharactersPage.dart';
 import 'package:flutter/material.dart';
 import 'package:cavalry_table/baseWigets/commonFlatButton.dart';
 
 class SavedCharactersButton extends StatefulWidget {
     final PagesNavigator navigatorObj;
-    final Map<String, dynamic> characterSavedList;
     const SavedCharactersButton(
         {super.key,
-        required this.navigatorObj,
-        required this.characterSavedList});
+        required this.navigatorObj});
 
     @override
     State<SavedCharactersButton> createState() => _SavedCharactersButtonState();
@@ -28,10 +26,7 @@ class _SavedCharactersButtonState extends State<SavedCharactersButton> {
                 onPressedCallback: () {
                     widget.navigatorObj.changePage(
                         context,
-                        CharacterListPage(
-                            navigatorObj: widget.navigatorObj,
-                            characterSavedList: widget.characterSavedList,
-                        ),
+                        const SavedCharactersPage(),
                     );
                 },
             ),
